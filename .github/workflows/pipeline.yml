@@ -34,7 +34,7 @@ jobs:
         shell: powershell
 
       - name: Salvar relatório de testes
-          uses: actions/upload-artifact@v3.2
+        uses: actions/upload-artifact@v3.2
         with:
           name: relatorio-testes
           path: target/surefire-reports/
