@@ -56,7 +56,7 @@ mvn test
 Clone o repositório:
 
 ```bash
-git clone https://github.com/SeuUsuario/seu-projeto.git
+git clone https://github.com/anagvaleta/ToDoList
 ```
 
 Entre na pasta:
