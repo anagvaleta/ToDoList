@@ -34,7 +34,7 @@ jobs:
         shell: powershell
 
       - name: Salvar relatório de testes
-        uses: actions/upload-artifact@v3.3.0
+        uses: actions/upload-artifact@v4
         with:
           name: relatorio-testes
           path: target/surefire-reports/
@@ -62,7 +62,7 @@ jobs:
         shell: powershell
 
       - name: Salvar artefato do build
-        uses: actions/upload-artifact@v3.3.0
+        uses: actions/upload-artifact@v4
         with:
           name: build-jar
           path: target/*.jar
