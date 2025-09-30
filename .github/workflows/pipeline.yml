@@ -1,0 +1,81 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  EMAIL_DESTINO: ${{ secrets.EMAIL_DESTINO }}
+  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+
+jobs:
+
+  # ===== Job 1: Testes =====
+  testes:
+    name: Executar Testes
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Instalar Maven
+        run: choco install maven -y
+        shell: powershell
+
+      - name: Executar testes
+        run: mvn test
+        shell: powershell
+
+      - name: Salvar relatório de testes
+        uses: actions/upload-artifact@v3
+        with:
+          name: relatorio-testes
+          path: target/surefire-reports/
+
+  # ===== Job 2: Build =====
+  build:
+    name: Build do Projeto
+    runs-on: windows-latest
+    needs: testes
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Instalar Maven
+        run: choco install maven -y
+        shell: powershell
+
+      - name: Build do projeto
+        run: mvn package
+        shell: powershell
+
+      - name: Salvar artefato do build
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-jar
+          path: target/*.jar
+
+  # ===== Job 3: Notificação =====
+  notificacao:
+    name: Notificação
+    runs-on: windows-latest
+    needs: [ testes, build ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Mostrar mensagem de sucesso
+        shell: powershell
+        run: Write-Host "Pipeline executado com sucesso!"
+  
+  
